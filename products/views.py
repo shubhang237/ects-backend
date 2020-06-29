@@ -5,9 +5,25 @@ from .serializers import ProductSerializer
 
 class ProductView(APIView):
     def get(self, request):
-        products = Product.objects.all()
-        serializer = ProductSerializer(products, many = True)
-        return Response({"products":serializer.data})
+        desktops = Product.objects.all().filter(productType="D")
+        laptops = Product.objects.all().filter(productType="L")
+        printers = Product.objects.all().filter(productType="P")
+        peripherals = Product.objects.all().filter(productType="O")
+        apple = Product.objects.all().filter(productType="A")
+        cctv = Product.objects.all().filter(productType="C")
+        desktop_serializer = ProductSerializer(desktops, many = True)
+        laptop_serializer = ProductSerializer(laptops, many = True)
+        printer_serializer = ProductSerializer(printers, many = True)
+        peripheral_serializer = ProductSerializer(peripherals, many = True)
+        apple_serializer = ProductSerializer(apple, many = True)
+        cctv_serializer = ProductSerializer(cctv, many = True)
+        return Response({"products": {
+            "desktops" : desktop_serializer.data,
+            "laptops" : laptop_serializer.data,
+            "printers" : printer_serializer.data,
+            "peripherals" : peripheral_serializer.data,
+            "apple" : apple_serializer.data,
+            "cctv" : cctv_serializer.data }})
 
     def put(self, request, pk):
         saved_product = get_object_or_404(Product.objects.all(),pk = pk)
